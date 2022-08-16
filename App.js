@@ -10,9 +10,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 
-// import the screens
-import Screen1 from './components/Screen1';
-import Screen2 from './components/Screen2';
+// import the start page and chat page
 import Home from './components/Start';
 import Chat from './components/Chat';
 // Create the navigator
