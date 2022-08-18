@@ -13,8 +13,9 @@ import { StyleSheet, Text, View } from 'react-native';
 // import the start page and chat page
 import Home from './components/Start';
 import Chat from './components/Chat';
-// Create the navigator
 
+
+//create the navigator from page to page
 export default function App() {
   const Stack = createStackNavigator();
   return (
