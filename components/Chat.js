@@ -2,13 +2,6 @@ import React from "react";
 import { GiftedChat } from "react-native-gifted-chat";
 import { View, Platform, KeyboardAvoidingView, Text } from 'react-native';
 
-import {
-  renderBubble,
-  renderSystemMessage,
-  renderMessageText,
-} from './MessageContainer';
-
-
 //import firebase data storage
 const firebase = require('firebase');
 require('firebase/firestore');
@@ -31,7 +24,6 @@ export default class Chat extends React.Component {
     this.state = {
       messages: [],
       uid: 0,
-      
     };
 
     // Initialize Firebase
@@ -50,7 +42,6 @@ export default class Chat extends React.Component {
             _id: data._id,
             text: data.text,
             createdAt: data.createdAt.toDate(),
-            user: data.user,
         });
     });
     this.setState({
@@ -80,13 +71,14 @@ export default class Chat extends React.Component {
 //   mounting the system messages and messages in a componenetDidMount function
 
   componentDidMount() {
-   this.authUnsubscribe = firebase.auth().onAuthStateChanged((user) => {
+   this.authUnsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
      if (!user) {
        firebase.auth().signInAnonymously();
      }
      this.setState({
        uid: user.uid,
        messages: [],
+       loggedInText: "Hello there"
      });
      this.unsubscribe = this.referenceChatMessages
        .orderBy("createdAt", "desc")
@@ -96,7 +88,6 @@ export default class Chat extends React.Component {
 
   componentWillUnmount() {
       this.unsubscribe();
-
       this.authUnsubscribe();
   }
 
@@ -107,13 +98,6 @@ render() {
     return (
         <View style={{ flex: 1 }}>
             <GiftedChat
-                alignTop
-                alwaysShowSend
-                scrollToBottom
-                renderBubble={renderBubble}
-                renderSystemMessage={renderSystemMessage}
-                // renderMessage={renderMessage}
-                renderMessageText={renderMessageText}
                 messages={this.state.messages}
                 onSend={(messages) => this.onSend(messages)}
                 user={{
