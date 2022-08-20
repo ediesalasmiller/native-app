@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, TextInput,Button, ImageBackground } from 'react-native';
+import { StyleSheet, View, Text, TextInput,Button, ImageBackground, TouchableOpacity, Pressable } from 'react-native';
 import Chat from './Chat';
 
 
@@ -12,20 +12,24 @@ export default class Home extends React.Component {
  render() {
    return (
      <View style={styles.container}>
-        <ImageBackground style={styles.image} source={require('../assets/Background-Image.png')}>
+        <ImageBackground style={styles.image} source={require('../assets/background-girl.png')}>
+            <View styles={styles.box1}>
             <TextInput
-            style={styles.inputText}
+            style={styles.input}
             onChangeText={(name) => this.setState({name})}
             value={this.state.name}
-            placeholder='Your Name'
-            />
-             <Button
-            style={styles.button}
-            title ="Begin Chatting"
+            placeholder='your name'
+            ></TextInput>
+               {/* Open chatroom, passing user name and background color as props */}
+          <Pressable style={styles.button}
             onPress={() => this.props.navigation.navigate('Chat', { name: this.state.name })}
-            />
+          >
+            <Text style={styles.buttontext}>Start Chatting</Text>
+          </Pressable>
+            </View>
         </ImageBackground>
     </View>
+    
    );
  }
 }
@@ -43,6 +47,27 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         
     },
+      box1: {
+      backgroundColor: "#FFFFFF",
+      height: "46%",
+      width: "88%",
+      justifyContent: "space-around",
+      alignItems: "center",
+    },
+  
+    input: {
+      height: 60,
+      width: '88%',
+      fontSize: 16,
+      fontWeight: '600',
+      color: '#ffffff',
+      borderColor: 'gray',
+      borderWidth: 1,
+      borderRadius: 4,
+      paddingHorizontal: 10,
+      alignItems: "center"
+    },
+
     inputText: {
         justifyContent:'center',
         fontSize: 20,
@@ -55,17 +80,17 @@ const styles = StyleSheet.create({
         textAlignVertical: 'top',
         fontFamily: "Cochin"
     },
-    button: {
-        fontSize: 16,
-        fontWeight: 300,
-        color: '#757083',
-        opacity: '100%',
-        fontFamily: "Cochin",
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingVertical: 12,
-        paddingHorizontal: 32,
-        borderRadius: 4,
-        elevation: 3,
-  }
+   button: {
+      height: 50,
+      width: '88%',
+      justifyContent: 'center',
+      alignItems: 'center',
+      color: '#FFC0CB',
+    },
+  
+    buttontext: {
+      color: '#ffffff',
+      fontSize: 16,
+      fontWeight: '600',
+    }
 });
