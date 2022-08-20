@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, TextInput,Button, ImageBackground, TouchableOpacity, Pressable } from 'react-native';
+import { StyleSheet, View, Text, TextInput,Button, ImageBackground, Image, Pressable } from 'react-native';
 import Chat from './Chat';
 
 
@@ -11,35 +11,41 @@ export default class Home extends React.Component {
 
  render() {
    return (
-     <View style={styles.container}>
-        <ImageBackground style={styles.image} source={require('../assets/background-girl.png')}>
-            <View styles={styles.box1}>
-            <TextInput
-            style={styles.input}
-            onChangeText={(name) => this.setState({name})}
-            value={this.state.name}
-            placeholder='your name'
-            ></TextInput>
-               {/* Open chatroom, passing user name and background color as props */}
-          <Pressable style={styles.button}
-            onPress={() => this.props.navigation.navigate('Chat', { name: this.state.name })}
-          >
-            <Text style={styles.buttontext}>Start Chatting</Text>
-          </Pressable>
-            </View>
-        </ImageBackground>
-    </View>
+     <ImageBackground style={styles.image} source={require('../assets/background-girl.png')}>
+        <View style={styles.container}>
+              <Image
+                source={require("../assets/signup.png")}
+                style={styles.imageStyle}
+              />
+            
+                <TextInput
+                style={styles.input}
+                onChangeText={(name) => this.setState({name})}
+                value={this.state.name}
+                placeholder='your name'
+                >
+                    
+                </TextInput>
+                {/* Open chatroom, passing user name and background color as props */}
+                <Pressable style={styles.button}
+                    onPress={() => this.props.navigation.navigate('Chat', { name: this.state.name })}>
+                    <Text style={styles.buttontext}>Start Chatting</Text>
+                </Pressable>
+            
+        </View>
+    </ImageBackground>
     
    );
  }
 }
 
 const styles = StyleSheet.create({
-   container: {
-        flex: 1,
-        justifyContent: 'center',
-        fontFamily: "Cochin"
-    },
+ container: {
+    flex: 1,
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+  },
     image: {
         flex: 1,
         resizeMode: 'cover',
@@ -47,14 +53,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         
     },
-      box1: {
-      backgroundColor: "#FFFFFF",
-      height: "46%",
-      width: "88%",
-      justifyContent: "space-around",
-      alignItems: "center",
-    },
-  
+   
     input: {
       height: 60,
       width: '88%',
@@ -84,13 +83,20 @@ const styles = StyleSheet.create({
       height: 50,
       width: '88%',
       justifyContent: 'center',
-      alignItems: 'center',
-      color: '#FFC0CB',
+     
     },
   
     buttontext: {
       color: '#ffffff',
       fontSize: 16,
       fontWeight: '600',
-    }
+    },
+     imageStyle: {
+    padding: 10,
+    margin: 5,
+    height: 25,
+    width: 25,
+    resizeMode: "stretch",
+    alignItems: "center",
+  },
 });
