@@ -1,6 +1,9 @@
 import React from "react";
 import { GiftedChat } from "react-native-gifted-chat";
 import { StyleSheet, View, Platform, KeyboardAvoidingView, Text, ImageBackground } from 'react-native';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getTimestamp } from "react-native-reanimated/lib/reanimated2/core";
+import NetInfo from '@react-native-community/netinfo';
 
 //import firebase data storage
 const firebase = require('firebase');
@@ -49,14 +52,14 @@ export default class Chat extends React.Component {
     })
    }
 
+
      //message sending function , take components previous state and appends new message to the messages object
   onSend(messages = []) {
-    this.setState((previousState) => ({
-      messages: GiftedChat.append(previousState.messages, messages),
-    }),
-    () => {
-        this.addMessage(this.state.messages[0]);
-    });
+  this.setState(previousState => ({
+    messages: GiftedChat.append(previousState.messages, messages),
+  }), () => {
+    this.saveMessages();
+  });
   }
 
     addMessage(message) {
@@ -68,6 +71,40 @@ export default class Chat extends React.Component {
         })
     };
 
+   async getMessage() {
+    let messages = '';
+      try {
+        messages = await AsyncStorage.getItem('messages') 
+        || [];
+        this.setState ({
+          messages: JSON.stringify(messages)
+        });  
+      }
+      catch(error) {
+        console.log(error.message)
+      }
+   }
+
+    async saveMessages() {
+    try {
+      await AsyncStorage.setItem('messages', JSON.stringify(this.state.messages))
+    }
+    catch(error) {
+        console.log(error.message)
+      }
+   }
+
+   async deleteMessages() {
+    try { 
+      await AsyncStorage.removeItem('messages');
+      this.setState({ 
+        messages: []
+      })
+    }
+    catch(error) {
+      console.log(error.message)
+    }
+   }
 
 //   mounting the system messages and messages in a componenetDidMount function
 
