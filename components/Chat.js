@@ -1,5 +1,5 @@
 import React from "react";
-import { GiftedChat } from "react-native-gifted-chat";
+import { GiftedChat, InputToolbar, Bubble } from "react-native-gifted-chat";
 import { StyleSheet, View, Platform, KeyboardAvoidingView, Text, ImageBackground } from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getTimestamp } from "react-native-reanimated/lib/reanimated2/core";
@@ -43,6 +43,7 @@ export default class Chat extends React.Component {
 //   mounting the system messages and messages in a componenetDidMount function
 
   componentDidMount() {
+    //routing name from welcome screen
     let { name} = this.props.route.params;
 
         // Reference to load messages via Firebase
@@ -67,7 +68,6 @@ export default class Chat extends React.Component {
         _id: user.uid,
         name: name,
       },
-       loggedInText: "Hello there"
      });
     this.referenceMessagesUser = firebase
                 .firestore()
@@ -96,6 +96,9 @@ export default class Chat extends React.Component {
             _id: data._id,
             text: data.text,
             createdAt: data.createdAt.toDate(),
+            user: {
+              _id: data._id
+            },
         });
     });
     this.setState({
@@ -106,6 +109,7 @@ export default class Chat extends React.Component {
   addMessage() {
     const message = this.state.messages[0];
     this.referenceChatMessages.add({
+      user: message.user,
       text: message.text,
       createdAt: message.createdAt,
       uid: this.state.uid,
@@ -154,7 +158,7 @@ export default class Chat extends React.Component {
     this.setState(previousState => ({
       messages: GiftedChat.append(previousState.messages, messages),
     }), () => {
-      // this.addMessages();
+      this.addMessage(this.state.messages);
       this.saveMessages();
     });
   }
@@ -187,19 +191,16 @@ renderBubble(props) {
 }
 
   render() {
-
-    <Text>{this.state.loggedInText}</Text>
     
-
     return (
       <View style={{flex: 1}}>
         <GiftedChat
-
+          renderInputToolbar={this.renderInputToolbar.bind(this)}
+          renderBubble={renderBubble.bind()}
           messages={this.state.messages}
           onSend={(messages) => this.onSend(messages)}
           user={{
             _id: this.state.user._id,
-            name: name,
           }}
         />
           {/* fixing the keyboard on android from being */}
