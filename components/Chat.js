@@ -1,6 +1,6 @@
 import React from "react";
 import { GiftedChat } from "react-native-gifted-chat";
-import { View, Platform, KeyboardAvoidingView, Text } from 'react-native';
+import { StyleSheet, View, Platform, KeyboardAvoidingView, Text, ImageBackground } from 'react-native';
 
 //import firebase data storage
 const firebase = require('firebase');
@@ -64,6 +64,7 @@ export default class Chat extends React.Component {
             text: message.text,
             createdAt: message.createdAt,
             uid: this.state.uid,
+            _id: message._id
         })
     };
 
@@ -93,21 +94,26 @@ export default class Chat extends React.Component {
 
 
 render() {
+
     <Text>{this.state.loggedInText}</Text>
+    
 
     return (
-        <View style={{ flex: 1 }}>
-            <GiftedChat
-                messages={this.state.messages}
-                onSend={(messages) => this.onSend(messages)}
-                user={{
-                _id: 1,
-                }}
-            />
-            {/* fixing the keyboard on android from being */}
-            { Platform.OS === 'android' ? <KeyboardAvoidingView behavior="height" /> : null
- }
-        </View>
+            <View style={{flex: 1}}>
+                <GiftedChat
+
+                    messages={this.state.messages}
+                    onSend={(messages) => this.onSend(messages)}
+                    user={{
+                    _id: 1,
+                    }}
+                />
+                {/* fixing the keyboard on android from being */}
+                { Platform.OS === 'android' ? <KeyboardAvoidingView behavior="height" /> : null
+    }
+            </View>
+
+       
     );
   }
 
