@@ -27,6 +27,10 @@ export default class Chat extends React.Component {
     this.state = {
       messages: [],
       uid: 0,
+      user: {
+        name: '',
+        _id: 1,
+      }
     };
 
     // Initialize Firebase
@@ -36,6 +40,53 @@ export default class Chat extends React.Component {
     this.referenceChatMessages = firebase.firestore().collection("messages");
   }
 
+//   mounting the system messages and messages in a componenetDidMount function
+
+  componentDidMount() {
+    let { name} = this.props.route.params;
+
+        // Reference to load messages via Firebase
+    this.referenceChatMessages = firebase.firestore().collection("messages");
+
+    NetInfo.fetch().then(connection => {
+      if (connection.isConnected) {
+        console.log('online');
+      } else {
+        console.log('offline');
+      }
+    });
+
+   this.authUnsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
+     if (!user) {
+       firebase.auth().signInAnonymously();
+     }
+     this.setState({
+       uid: user.uid,
+       messages: [],
+        user: {
+        _id: user.uid,
+        name: name,
+      },
+       loggedInText: "Hello there"
+     });
+    this.referenceMessagesUser = firebase
+                .firestore()
+                .collection("messages")
+                .where("uid", '==', this.state.uid);
+              // save messages when user online
+                this.saveMessages();
+      this.unsubscribe = this.referenceChatMessages
+        .orderBy("createdAt", "desc")
+        .onSnapshot(this.onCollectionUpdate);
+   });
+ }
+
+  componentWillUnmount() {
+      // this.unsubscribe();
+      this.authUnsubscribe();
+  }
+
+    // Reading snapshot data of messages collection, adding messages to messages state
   onCollectionUpdate = (querySnapshot) => {
     const messages = [];
     //go through each doc
@@ -50,51 +101,42 @@ export default class Chat extends React.Component {
     this.setState({
         messages,
     })
-   }
-
-
-     //message sending function , take components previous state and appends new message to the messages object
-  onSend(messages = []) {
-  this.setState(previousState => ({
-    messages: GiftedChat.append(previousState.messages, messages),
-  }), () => {
-    this.saveMessages();
-  });
   }
 
-    addMessage(message) {
-        this.referenceChatMessages.add({
-            text: message.text,
-            createdAt: message.createdAt,
-            uid: this.state.uid,
-            _id: message._id
+  addMessage() {
+    const message = this.state.messages[0];
+    this.referenceChatMessages.add({
+      text: message.text,
+      createdAt: message.createdAt,
+      uid: this.state.uid,
+      _id: message._id
         })
-    };
+  };
 
-   async getMessage() {
+  async getMessage() {
     let messages = '';
       try {
         messages = await AsyncStorage.getItem('messages') 
         || [];
         this.setState ({
-          messages: JSON.stringify(messages)
+          messages: JSON.parse(messages)
         });  
       }
       catch(error) {
         console.log(error.message)
       }
-   }
+  }
 
-    async saveMessages() {
+    // firebase storage
+  async saveMessages() {
     try {
-      await AsyncStorage.setItem('messages', JSON.stringify(this.state.messages))
+      await AsyncStorage.setItem('messages', JSON.stringify(this.state.messages));
+    } catch (error) {
+      console.log(error.message);
     }
-    catch(error) {
-        console.log(error.message)
-      }
-   }
+  }
 
-   async deleteMessages() {
+  async deleteMessages() {
     try { 
       await AsyncStorage.removeItem('messages');
       this.setState({ 
@@ -104,51 +146,39 @@ export default class Chat extends React.Component {
     catch(error) {
       console.log(error.message)
     }
-   }
-
-//   mounting the system messages and messages in a componenetDidMount function
-
-  componentDidMount() {
-   this.authUnsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
-     if (!user) {
-       firebase.auth().signInAnonymously();
-     }
-     this.setState({
-       uid: user.uid,
-       messages: [],
-       loggedInText: "Hello there"
-     });
-     this.unsubscribe = this.referenceChatMessages
-       .orderBy("createdAt", "desc")
-       .onSnapshot(this.onCollectionUpdate);
-   });
- }
-
-  componentWillUnmount() {
-      this.unsubscribe();
-      this.authUnsubscribe();
   }
 
 
-render() {
+      //message sending function , take components previous state and appends new message to the messages object
+  onSend(messages = []) {
+    this.setState(previousState => ({
+      messages: GiftedChat.append(previousState.messages, messages),
+    }), () => {
+      // this.addMessages();
+      this.saveMessages();
+    });
+  }
+   
+
+
+  render() {
 
     <Text>{this.state.loggedInText}</Text>
     
 
     return (
-            <View style={{flex: 1}}>
-                <GiftedChat
+      <View style={{flex: 1}}>
+        <GiftedChat
 
-                    messages={this.state.messages}
-                    onSend={(messages) => this.onSend(messages)}
-                    user={{
-                    _id: 1,
-                    }}
-                />
-                {/* fixing the keyboard on android from being */}
-                { Platform.OS === 'android' ? <KeyboardAvoidingView behavior="height" /> : null
-    }
-            </View>
+          messages={this.state.messages}
+          onSend={(messages) => this.onSend(messages)}
+          user={{
+            _id: this.state.user._id,
+          }}
+        />
+          {/* fixing the keyboard on android from being */}
+        { Platform.OS === 'android' ? <KeyboardAvoidingView behavior="height" /> : null}
+      </View>
 
        
     );
