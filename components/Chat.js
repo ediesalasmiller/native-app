@@ -160,6 +160,31 @@ export default class Chat extends React.Component {
   }
    
 
+// When user is offline disable sending new messages 
+renderInputToolbar(props) {
+  if (this.state.isConnected == false) {
+  } else {
+    return(
+      <InputToolbar
+      {...props}
+      />
+    );
+  }
+}
+
+// Customize the color of the sender bubble
+renderBubble(props) {
+  return (
+    <Bubble
+      {...props}
+      wrapperStyle={{
+        right: {
+          backgroundColor: '#ADD8E6'
+        }
+      }}
+    />
+  )
+}
 
   render() {
 
@@ -174,6 +199,7 @@ export default class Chat extends React.Component {
           onSend={(messages) => this.onSend(messages)}
           user={{
             _id: this.state.user._id,
+            name: name,
           }}
         />
           {/* fixing the keyboard on android from being */}
