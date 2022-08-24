@@ -196,7 +196,7 @@ renderBubble(props) {
       <View style={{flex: 1}}>
         <GiftedChat
           renderInputToolbar={this.renderInputToolbar.bind(this)}
-          renderBubble={renderBubble.bind()}
+          // renderBubble={renderBubble.bind()}
           messages={this.state.messages}
           onSend={(messages) => this.onSend(messages)}
           user={{
