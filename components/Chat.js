@@ -184,9 +184,12 @@ renderBubble(props) {
     <Bubble
       {...props}
       wrapperStyle={{
+        left: {
+          backgroundColor: '#fafafa'
+        },
         right: {
           backgroundColor: '#ADD8E6'
-        }
+        },
       }}
     />
   )
