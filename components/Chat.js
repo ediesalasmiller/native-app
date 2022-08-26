@@ -5,6 +5,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getTimestamp } from "react-native-reanimated/lib/reanimated2/core";
 import NetInfo from '@react-native-community/netinfo';
 
+
 //import firebase data storage
 const firebase = require('firebase');
 require('firebase/firestore');
@@ -196,7 +197,7 @@ renderBubble(props) {
       <View style={{flex: 1}}>
         <GiftedChat
           renderInputToolbar={this.renderInputToolbar.bind(this)}
-          // renderBubble={renderBubble.bind()}
+          renderBubble={this.renderBubble.bind()}
           messages={this.state.messages}
           onSend={(messages) => this.onSend(messages)}
           user={{
