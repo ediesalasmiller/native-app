@@ -46,7 +46,7 @@ export default class Chat extends React.Component {
 
   componentDidMount() {
     //routing name from welcome screen
-    let { name} = this.props.route.params;
+    let { name } = this.props.route.params;
 
         // Reference to load messages via Firebase
     this.referenceChatMessages = firebase.firestore().collection("messages");
@@ -209,7 +209,7 @@ renderBubble(props) {
           onSend={(messages) => this.onSend(messages)}
           user={{
             _id: this.state.user._id,
-            // name: this.state.name
+            name: this.state.user.name
           }}
         />
           {/* fixing the keyboard on android from being */}
