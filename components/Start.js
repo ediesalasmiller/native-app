@@ -1,14 +1,15 @@
-import React, { Component } from 'react';
-import { StyleSheet, View, Text, TextInput,Button, ImageBackground, Image, Pressable } from 'react-native';
-import Chat from './Chat';
+import React from 'react';
+import { StyleSheet, View, Text, TextInput, ImageBackground, Image, Pressable } from 'react-native';
 
 
 export default class Home extends React.Component {
  constructor(props) {
    super(props);
-   this.state = { text: '' };
+   this.state = { name: '' };
  }
 
+
+  
  render() {
    return (
      <ImageBackground style={styles.image} source={require('../assets/background-girl.png')}>
@@ -23,9 +24,8 @@ export default class Home extends React.Component {
                 onChangeText={(name) => this.setState({name})}
                 value={this.state.name}
                 placeholder='your name'
-                >
-                    
-                </TextInput>
+                 />
+
                 {/* Open chatroom, passing user name and background color as props */}
                 <Pressable style={styles.button}
                     onPress={() => this.props.navigation.navigate('Chat', { name: this.state.name })}>

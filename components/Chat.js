@@ -4,6 +4,7 @@ import { StyleSheet, View, Platform, KeyboardAvoidingView, Text, ImageBackground
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getTimestamp } from "react-native-reanimated/lib/reanimated2/core";
 import NetInfo from '@react-native-community/netinfo';
+import { renderInputToolbar, renderActions, renderComposer, renderSend } from './InputToolbar';
 
 
 //import firebase data storage
@@ -30,7 +31,7 @@ export default class Chat extends React.Component {
       uid: 0,
       user: {
         name: '',
-        _id: 1,
+        _id: '',
       }
     };
 
@@ -166,18 +167,17 @@ export default class Chat extends React.Component {
   }
    
 
-// When user is offline disable sending new messages 
-renderInputToolbar(props) {
-  if (this.state.isConnected == false) {
-  } else {
-    return(
-      <InputToolbar
-      {...props}
-      />
-    );
-  }
-}
-
+// // When user is offline disable sending new messages 
+// renderInputToolbar(props) {
+//   if (this.state.isConnected == false) {
+//   } else {
+//     return(
+//       <InputToolbar
+//       {...props}
+//       />
+//     );
+//   }
+// }
 // Customize the color of the sender bubble
 renderBubble(props) {
   return (
@@ -200,13 +200,16 @@ renderBubble(props) {
     return (
       <View style={{flex: 1}}>
         <GiftedChat
-          renderInputToolbar={this.renderInputToolbar.bind(this)}
-          renderBubble={this.renderBubble.bind()}
+          renderInputToolbar={renderInputToolbar}
+          renderActions={renderActions}
+          // renderComposer={renderComposer}
+          // renderSend={renderSend}
+          renderBubble={this.renderBubble}
           messages={this.state.messages}
           onSend={(messages) => this.onSend(messages)}
           user={{
             _id: this.state.user._id,
-            name: this.state.name,
+            // name: this.state.name
           }}
         />
           {/* fixing the keyboard on android from being */}
