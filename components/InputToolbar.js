@@ -2,7 +2,8 @@ import React from 'react';
 import { Image } from 'react-native';
 import { InputToolbar, Actions, Composer, Send } from 'react-native-gifted-chat';
 
-export const renderInputToolbar = (props) => (
+export const renderInputToolbar= (props)  =>{
+
   <InputToolbar
     {...props}
     containerStyle={{
@@ -11,7 +12,7 @@ export const renderInputToolbar = (props) => (
     }}
     primaryStyle={{ alignItems: 'center' }}
   />
-);
+  }
 
 export const renderActions = (props) => (
   <Actions
