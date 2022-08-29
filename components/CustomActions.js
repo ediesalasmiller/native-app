@@ -13,7 +13,7 @@ import { MEDIA_LIBRARY } from "expo-permissions";
 import firebase from 'firebase';
 import firestore from 'firebase';
 
-import { InputToolbar } from "react-native-gifted-chat";
+
 
 //import firebase
 // const firebase = require("firebase");

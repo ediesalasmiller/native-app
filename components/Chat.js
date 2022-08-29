@@ -2,7 +2,6 @@ import React from "react";
 import { GiftedChat, InputToolbar, Bubble } from "react-native-gifted-chat";
 import { StyleSheet, View, Platform, KeyboardAvoidingView, Text, ImageBackground } from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getTimestamp } from "react-native-reanimated/lib/reanimated2/core";
 import NetInfo from '@react-native-community/netinfo';
 import CustomActions from "./CustomActions";
 
