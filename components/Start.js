@@ -12,10 +12,10 @@ export default class Home extends React.Component {
   
  render() {
    return (
-     <ImageBackground style={styles.image} source={require('../assets/background-girl.png')}>
+     <ImageBackground style={styles.image} source={require('../assets/Background-Image.png')}>
         <View style={styles.container}>
               <Image
-                source={require("../assets/signup.png")}
+                source={require("../assets/icon.svg")}
                 style={styles.imageStyle}
               />
             

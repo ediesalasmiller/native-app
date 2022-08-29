@@ -15,6 +15,8 @@ import Home from './components/Start';
 import Chat from './components/Chat';
 
 
+
+
 //create the navigator from page to page
 export default function App() {
   const Stack = createStackNavigator();
