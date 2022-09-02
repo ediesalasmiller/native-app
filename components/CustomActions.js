@@ -88,7 +88,7 @@ export default class CustomActions extends React.Component {
     }
   };
 
- //UPLOAD TO FIREBASE
+ //UPLOAD TO FIREBASE, convert to blob, collection of binary data stored in db
   uploadImageFetch = async (uri) => {
     const blob = await new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();

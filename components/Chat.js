@@ -43,53 +43,64 @@ export default class Chat extends React.Component {
     this.referenceChatMessages = firebase.firestore().collection("messages");
   }
 
- //   mounting the system messages and messages in a componenetDidMount function
-  // componentDidMount is a "lifecycle method". Lifecycle methods run the
-  // function at various times during a component's "lifecycle". For example
-  // componentDidMount will run right after the component was added to the page.
   componentDidMount() {
     //routing name from welcome screen
     let { name } = this.props.route.params;
-
+    this.props.navigation.setOptions({ title: name });
         // Reference to load messages via Firebase
     this.referenceChatMessages = firebase.firestore().collection("messages");
 
+    //netinfo checks if the user is offline or onliner
     NetInfo.fetch().then(connection => {
       if (connection.isConnected) {
         console.log('online');
-      } else {
-        console.log('offline');
-      }
-    });
+          //must set the state of isConnected when connecting the server to true. 
+        this.setState({
+          isConnected: true,
+        })
 
-   this.authUnsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
-     if (!user) {
-       firebase.auth().signInAnonymously();
-     }
-     this.setState({
-       uid: user.uid,
-       messages: [],
-        user: {
-        _id: user.uid,
-        name: name,
-      },
-     });
-    this.referenceMessagesUser = firebase
-                .firestore()
-                .collection("messages")
-                .where("uid", '==', this.state.uid);
-              // save messages when user online
-                this.saveMessages();
-      this.unsubscribe = this.referenceChatMessages
-        .orderBy("createdAt", "desc")
-        .onSnapshot(this.onCollectionUpdate);
-   })
+        //reference to load the messages from firebase
+          this.referenceMessagesUser = firebase
+                    .firestore()
+                    .collection("messages")
+                    .where("uid", '==', this.state.uid);
+                  // save messages when user online
+                    this.saveMessages();
+
+        //authenticate the user anonymously
+        this.authUnsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
+          if (!user) {
+            firebase.auth().signInAnonymously();
+          }
+          this.setState({
+            uid: user.uid,
+            messages: [],
+              user: {
+              _id: user.uid,
+              name: name,
+            },
+          });
+
+          this.unsubscribe = this.referenceChatMessages
+            .orderBy("createdAt", "desc")
+            .onSnapshot(this.onCollectionUpdate);
+        })
+      } else {
+          this.setState({
+            isConnected: false,
+          });
+          //offline but still showing messages when offline.
+          this.getMessage
+        }
+    });
   }
  
 
   componentWillUnmount() {
-      // this.unsubscribe();
+    if (this.isConnected){
+      this.unsubscribe();
       this.authUnsubscribe();
+    }
   }
 
     // Reading snapshot data of messages collection, adding messages to messages state
@@ -114,7 +125,7 @@ export default class Chat extends React.Component {
     })
   }
 
-  addMessage() {
+  async addMessage() {
     const message = this.state.messages[0];
     this.referenceChatMessages.add({
       user: message.user,
@@ -150,7 +161,7 @@ export default class Chat extends React.Component {
 
    
   // firebase storage
-  saveMessages = async () => {
+  async saveMessages() {
     try {
       await AsyncStorage.setItem(
         "messages",
@@ -161,7 +172,7 @@ export default class Chat extends React.Component {
     }
   };
 
-  deleteMessages = async () => {
+  async deleteMessages() {
     try {
       await AsyncStorage.removeItem("messages");
     } catch (error) {
@@ -177,8 +188,9 @@ export default class Chat extends React.Component {
         messages: GiftedChat.append(previousState.messages, messages),
       }),
       () => {
-        this.addMessage();
+        this.addMessage(this.state.messages[0]);
         this.saveMessages();
+        this.deleteMessages()
       }
     );
   };
