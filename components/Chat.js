@@ -1,6 +1,6 @@
 import React from "react";
 import { GiftedChat, InputToolbar, Bubble } from "react-native-gifted-chat";
-import { StyleSheet, View, Platform, KeyboardAvoidingView, Text, ImageBackground } from 'react-native';
+import { View, Platform, KeyboardAvoidingView } from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import NetInfo from '@react-native-community/netinfo';
 import CustomActions from "./CustomActions";
@@ -161,7 +161,7 @@ export default class Chat extends React.Component {
 
    
   // firebase storage
-  async saveMessages() {
+  saveMessages = async () =>{
     try {
       await AsyncStorage.setItem(
         "messages",
@@ -223,7 +223,7 @@ export default class Chat extends React.Component {
     )
   }
 
-  renderCustomActions = (props) => < CustomActions {...props} />;
+
 
   //custom map view.. check if the currentMessage contains location data.
   renderCustomView(props) {
@@ -244,6 +244,9 @@ export default class Chat extends React.Component {
     return null;
   }
 
+  renderCustomActions = (props) => <CustomActions {...props} />;
+
+
   render() {
     
     return (
@@ -251,7 +254,7 @@ export default class Chat extends React.Component {
         <GiftedChat
           isConnected={this.state.isConnected}
           renderInputToolbar={this.renderInputToolbar.bind(this)}
-          renderActions={this.renderCustomActions.bind(this)}
+          renderActions={this.renderCustomActions}
           renderCustomView={this.renderCustomView}
           renderBubble={this.renderBubble}
           messages={this.state.messages}

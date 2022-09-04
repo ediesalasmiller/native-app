@@ -10,3 +10,6 @@ Made with:
 -GiftedChat
 
 -Google's Firebase Database
+
+customactions.js:
+https://github.com/expo/react-native-action-sheet
