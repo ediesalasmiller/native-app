@@ -9,7 +9,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 //import locations and image finder (permissions within API , permission API is deprecated)
 import * as ImagePicker from "expo-image-picker";
 import * as Location from "expo-location";
-import MapView from 'react-native-maps';
+
 
 //connect action sheet
 import { connectActionSheet } from '@expo/react-native-action-sheet';
