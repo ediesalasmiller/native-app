@@ -15,19 +15,43 @@ import * as Location from "expo-location";
 import { connectActionSheet } from '@expo/react-native-action-sheet';
 
 import firebase from 'firebase';
-import firestore from 'firebase';
+// import firestore from 'firebase';
 
-
-
-//import firebase
-// const firebase = require("firebase");
-// require("firebase/firestore");
 
 class CustomAction extends React.Component {
   
-  async pickImage() {
+
+  //UPLOAD TO FIREBASE, convert to blob, collection of binary data stored in db
+  uploadImageFetch = async (uri) => {
+    const blob = await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function () {
+        resolve(xhr.response);
+      };
+      xhr.onerror = function (e) {
+        console.log(e);
+        reject(new TypeError("Network request failed"));
+      };
+      xhr.responseType = 'blob';
+      xhr.open('GET', uri, true);
+      xhr.send(null);
+    });
+
+    const imageNameBefore = uri.split('/');
+    const imageName = imageNameBefore[imageNameBefore.length - 1];
+
+    const ref = firebase.storage().ref().child(`images/${imageName}`);
+
+    const snapshot = await ref.put(blob);
+
+    blob.close();
+
+    return await snapshot.ref.getDownloadURL();
+  };
+
+   async pickImage() {
     // expo permission
-    const { status } = await ImagePicker.getMediaLibraryPermissionsAsync();
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     try {
       if (status === "granted") {
         // pick image
@@ -46,53 +70,29 @@ class CustomAction extends React.Component {
     }
   };
 
-  //UPLOAD TO FIREBASE, convert to blob, collection of binary data stored in db
-  uploadImageFetch = async (uri) => {
-    const blob = await new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.onload = function () {
-        resolve(xhr.response);
-      };
-      xhr.onerror = function (e) {
-        console.log(e);
-        reject(new TypeError("Network request failed"));
-      };
-      xhr.responseType = "blob";
-      xhr.open("GET", uri, true);
-      xhr.send(null);
-    });
-
-    const imageNameBefore = uri.split("/");
-    const imageName = imageNameBefore[imageNameBefore.length - 1];
-
-    const ref = firebase.storage().ref().child(`images/${imageName}`);
-
-    const snapshot = await ref.put(blob);
-
-    blob.close();
-
-    return await snapshot.ref.getDownloadURL();
-  };
-
 
  //take photo with device camera
   takePhoto = async () => {
-    const { status } = await Permissions.askAsync(
-      Permissions.CAMERA,
-      Permissions.MEDIA_LIBRARY
-    );
-    try {
-      if (status === "granted") {
-        const result = await ImagePicker.launchCameraAsync({
-          mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        }).catch((error) => console.log(error));
+    //request permission
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
 
+    try {
+      
+      if (status === "granted") {
+        //open camera
+        let result = await ImagePicker.launchCameraAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        }).catch(error => console.error(error));
+        // if action is not cancelled, upload and send image
         if (!result.cancelled) {
           const imageUrl = await this.uploadImageFetch(result.uri);
+
           this.props.onSend({ image: imageUrl });
+         
         }
       }
-    } catch (error) {
+    }
+     catch (error) {
       console.log(error.message);
     }
   };
@@ -201,6 +201,7 @@ CustomAction.contextTypes = {
   actionSheet: PropTypes.func,
 };
 
+//connect actionsheet for drop down options
 const CustomActions = connectActionSheet(CustomAction);
 
 export default CustomActions;
