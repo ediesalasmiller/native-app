@@ -91,7 +91,7 @@ export default class Chat extends React.Component {
             isConnected: false,
           });
           //offline but still showing messages when offline.
-          this.getMessage
+          this.getMessage()
         }
     });
   }
