@@ -158,7 +158,7 @@ class CustomAction extends React.Component {
   //render function
   render() {
     return (
-      <View style={[styles.wrapper, this.props.wrapperStyle]}>
+    
         <TouchableOpacity
           accessible={true}
           accessibilityLabel="More options"
@@ -166,9 +166,11 @@ class CustomAction extends React.Component {
           style={[styles.container]}
           onPress={this.onActionPress}
         >
+            <View style={[styles.wrapper, this.props.wrapperStyle]}>
           <Text style={[styles.iconText, this.props.iconTextStyle]}>+</Text>
+          </View>
         </TouchableOpacity>
-      </View>
+      
       
     );
   }
@@ -176,7 +178,7 @@ class CustomAction extends React.Component {
 
 const styles = StyleSheet.create({
     container: {
-    widht: 26,
+    width: 26,
     height: 26,
     marginLeft: 10,
     marginBottom: 10,
@@ -185,7 +187,6 @@ const styles = StyleSheet.create({
     borderRadius: 13,
     borderColor: '#b2b2b2',
     borderWidth: 2,
-    width: 26,
     flex: 1,
   },
   iconText: {
