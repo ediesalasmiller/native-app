@@ -1,4 +1,4 @@
-# native-app
+# Chat Room App
 
 Creating a native react app.
 -Developing the chat room with GiftedChat 
