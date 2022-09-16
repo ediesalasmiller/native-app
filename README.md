@@ -1,23 +1,18 @@
-# Chat Room App
+# Chat Room iOSApp
+React Native App
 
-Creating a native react app.
--Developing the chat room with GiftedChat 
-- Testing on Expo on iOS device, currently not testing for Android users.
+Chat app for mobile devices using React Native. Provides users with a chat interface and options to share images and their
+location.
 
-Made with:
--Expo
--React Native
--GiftedChat
+## Technical Elements
+* React Native
+* GiftedChat
+* Google Firebase Database
+* Developed with Expo
+* Expo Location API
+* Testing process on Expo iOS app, currently not testing for Android users.
+* Chat conversations stored locally.
 
--Google's Firebase Database
-
--stores images in firebase
--sends locations with expo Location API
-
-customactions.js:
-https://github.com/expo/react-native-action-sheet
-
-to install:
--npm install --global expo-cli
--run expo start to view from expo app on iphone / andriod / emulator
--
+### Installation 
+- npm install --global expo-cli
+- run expo start to view from expo app on iphone / andriod / emulator
